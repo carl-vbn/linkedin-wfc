@@ -12,6 +12,9 @@ class ImageSymbol:
         self.image = image
 
     def draw(self, screen, x, y, cell_size):
+        if self.image is None:
+            return
+
         screen.blit(self.image, (x + 8, y + 8))
 
 # CROWN = Symbol()
@@ -21,3 +24,4 @@ class ImageSymbol:
 CROWN = ImageSymbol(pygame.image.load("assets/crown.png"))
 MOON = ImageSymbol(pygame.image.load("assets/moon.png"))
 SUN = ImageSymbol(pygame.image.load("assets/sun.png"))
+EMPTY = ImageSymbol(None)

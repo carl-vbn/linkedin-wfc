@@ -11,7 +11,6 @@ class State:
 class Cell:
     def __init__(self, bg_col, border_col, possible_states=None):
         self.bg_col = bg_col
-        self.solved_col = (min(255, bg_col[0] + 50), min(255, bg_col[1] + 50), min(255, bg_col[2] + 50))
         self.border_col = border_col
         self.states = [s for s in possible_states] if possible_states else []
 
@@ -33,7 +32,8 @@ class Cell:
         pygame.draw.rect(screen, self.border_col, (x, y, cell_size, cell_size))
 
         # Content
-        pygame.draw.rect(screen, self.solved_col if len(self.states) == 1 else self.bg_col, (x + 1, y + 1, cell_size - 2, cell_size - 2))
+        solved_col = (min(255, self.bg_col[0] + 50), min(255, self.bg_col[1] + 50), min(255, self.bg_col[2] + 50))
+        pygame.draw.rect(screen, solved_col if len(self.states) == 1 else self.bg_col, (x + 1, y + 1, cell_size - 2, cell_size - 2))
         
         for possible_state in self.states:
             possible_state.symbol.draw(screen, x, y, cell_size)
@@ -66,6 +66,7 @@ class Grid:
         for x in range(self.width):
             for y in range(self.height):
                 self.cells[x][y].states = [s for s in self.possible_states]
+                self.cells[x][y].bg_col = self.bg_col
 
     def draw(self, screen):
         for x in range(self.width):
@@ -107,7 +108,7 @@ class Grid:
         for x in range(self.width):
             yield self.cells[x][y]
     
-    def update_superpositions(self, recursion_depth=7):
+    def update_superpositions(self, recursion_depth=20):
         updated = True
         while updated:
             updated = False
